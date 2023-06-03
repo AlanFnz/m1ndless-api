@@ -5,6 +5,8 @@ import { AppDataSource } from './data-source';
 import { Routes } from './routes';
 import { User } from './entity/User';
 
+import { port } from "./config";
+
 function handleError(error, req, res, next) {
   res.status(error.statusCode || 500).send({ message: error.message });
 }
@@ -33,9 +35,9 @@ AppDataSource.initialize()
     });
 
     app.use(handleError);
-    app.listen(3000);
+    app.listen(port);
 
-    console.log('Running on port 3000');
+    console.log(`Running on port ${port}`);
   })
   .catch((error) => console.log(error));
 
