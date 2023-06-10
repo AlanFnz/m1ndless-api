@@ -1,0 +1,4 @@
+export const HTTP_STATUS_CODES = {
+  INTERNAL_SERVER_ERROR: 500,
+  BAD_REQUEST: 400,
+};
