@@ -6,7 +6,8 @@ import { Routes } from './routes';
 import { morganConfig } from './config';
 import { validationResult } from 'express-validator';
 import { HTTP_STATUS_CODES } from './constants';
-import { handleError } from './middlewares/error-handling';
+import { handleError } from './middlewares/error-handler';
+import { errorHandler } from './middlewares/error-handler/error-handler';
 
 const app = express();
 app.use(morgan(morganConfig));
@@ -39,5 +40,14 @@ Routes.forEach((route) => {
 });
 
 app.use(handleError);
+
+process.on('uncaughtException', async (error: Error) => {
+  await errorHandler.handleError(error);
+  if (!errorHandler.isTrustedError(error)) process.exit(1); //TODO: make sure to implement the restart
+});
+
+process.on('unhandledRejection', (reason: Error) => {
+  throw reason;
+});
 
 export default app;
