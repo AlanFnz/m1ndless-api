@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { errorHandler } from './error-handler';
+import { errorHandler } from './errorHandler';
 
 export async function handleError(
   error: any,

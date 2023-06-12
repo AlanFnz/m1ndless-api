@@ -7,7 +7,7 @@ import { morganConfig } from './config';
 import { validationResult } from 'express-validator';
 import { HTTP_STATUS_CODES } from './constants';
 import { handleError } from './middlewares/error-handler';
-import { errorHandler } from './middlewares/error-handler/error-handler';
+import { errorHandler } from './middlewares/error-handler/errorHandler';
 
 const app = express();
 app.use(morgan(morganConfig));

@@ -1,6 +1,6 @@
 import bunyan from 'bunyan';
 import { logger } from '../logger';
-import { BaseError } from './base-error';
+import { BaseError } from './baseError';
 
 class ErrorHandler {
   logger: bunyan;
