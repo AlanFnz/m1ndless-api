@@ -1,14 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import { APIError } from '../../middlewares/error-handler/api-error';
 import { HTTP_STATUS_CODES, RESPONSE_MESSAGES } from '../../constants';
-import { UserService } from './user.service'; // Import UserService
-
+import { UserService } from './user.service';
 export class UserController {
-  private userService = new UserService(); // Initialize UserService
+  private userService = new UserService();
 
   async all(request: Request, response: Response, next: NextFunction) {
     try {
-      const users = await this.userService.getAllUsers(); // Use UserService method
+      const users = await this.userService.getAllUsers();
       response.status(HTTP_STATUS_CODES.OK).send(users);
     } catch (error) {
       next(
@@ -24,7 +23,7 @@ export class UserController {
   async one(request: Request, response: Response, next: NextFunction) {
     try {
       const id = parseInt(request.params.id, 10);
-      const user = await this.userService.getUserById(id); // Use UserService method
+      const user = await this.userService.getUserById(id);
 
       if (user) {
         response.status(HTTP_STATUS_CODES.OK).send(user);
@@ -46,7 +45,7 @@ export class UserController {
 
   async save(request: Request, response: Response, next: NextFunction) {
     try {
-      const user = await this.userService.createUser(request.body); // Use UserService method
+      const user = await this.userService.createUser(request.body);
       response.status(HTTP_STATUS_CODES.CREATED).send(user);
     } catch (error) {
       next(
@@ -62,7 +61,7 @@ export class UserController {
   async remove(request: Request, response: Response, next: NextFunction) {
     try {
       const id = parseInt(request.params.id, 10);
-      await this.userService.removeUser(id); // Use UserService method
+      await this.userService.removeUser(id);
       response.status(HTTP_STATUS_CODES.NO_CONTENT).send();
     } catch (error) {
       next(

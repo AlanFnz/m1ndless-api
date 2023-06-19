@@ -1,7 +1,7 @@
 import bunyan, { LogLevel } from 'bunyan';
 
 export const logger = bunyan.createLogger({
-  name: 'test',
+  name: 'mainLogger',
   streams: [
     {
       stream: process.stdout,
@@ -10,4 +10,4 @@ export const logger = bunyan.createLogger({
   ],
 });
 
-logger.info('test logger started');
+logger.info('mainLogger logger started');
