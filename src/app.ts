@@ -1,6 +1,6 @@
-import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import * as morgan from 'morgan';
+import morgan from 'morgan';
+import express from 'express';
 import { Request, Response } from 'express';
 import { Routes } from './routes';
 import { morganConfig } from './config';

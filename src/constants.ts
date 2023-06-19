@@ -1,12 +1,13 @@
 export enum HTTP_STATUS_CODES {
   OK = 200,
+  NO_CONTENT = 204,
   BAD_REQUEST = 400,
   ALREADY_EXISTS = 403,
   NOT_FOUND = 404,
   INTERNAL_SERVER_ERROR = 500,
 }
 
-export const ResponseMessages = {
+export const RESPONSE_MESSAGES = {
   // common
   VALIDATION_ERROR:
     'One or more errors occurred when validating this request body',
