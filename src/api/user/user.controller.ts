@@ -1,14 +1,14 @@
-import { AppDataSource } from '../../dataSource';
 import { NextFunction, Request, Response } from 'express';
-import { User } from './user.entity';
 import { APIError } from '../../middlewares/error-handler/api-error';
 import { HTTP_STATUS_CODES, RESPONSE_MESSAGES } from '../../constants';
+import { UserService } from './user.service'; // Import UserService
+
 export class UserController {
-  private userRepository = AppDataSource.getRepository(User);
+  private userService = new UserService(); // Initialize UserService
 
   async all(request: Request, response: Response, next: NextFunction) {
     try {
-      const users = await this.userRepository.find();
+      const users = await this.userService.getAllUsers(); // Use UserService method
       response.status(HTTP_STATUS_CODES.OK).send(users);
     } catch (error) {
       next(
@@ -18,78 +18,60 @@ export class UserController {
           HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
         )
       );
-      response.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).send({
-        errors: [RESPONSE_MESSAGES.USERS_GET_FAIL],
-      });
     }
   }
 
   async one(request: Request, response: Response, next: NextFunction) {
     try {
-      const id = parseInt(request.params.id);
-      const user = await this.userRepository.findOne({
-        where: { id },
-      });
+      const id = parseInt(request.params.id, 10);
+      const user = await this.userService.getUserById(id); // Use UserService method
 
       if (user) {
         response.status(HTTP_STATUS_CODES.OK).send(user);
       } else {
         response.status(HTTP_STATUS_CODES.NOT_FOUND).send({
-          errors: [RESPONSE_MESSAGES.USER_NOT_FOUND(request.body.id)],
+          errors: [RESPONSE_MESSAGES.USER_NOT_FOUND(id.toString())],
         });
       }
     } catch (error) {
       next(
         new APIError(
           RESPONSE_MESSAGES.USER_GET_FAIL,
-          'all',
+          'one',
           HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
         )
       );
-      response.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).send({
-        errors: [RESPONSE_MESSAGES.USER_GET_FAIL],
-      });
     }
   }
 
   async save(request: Request, response: Response, next: NextFunction) {
     try {
-      const { firstName, lastName, age } = request.body;
-
-      const user = Object.assign(new User(), {
-        firstName,
-        lastName,
-        age,
-      });
-
-      response.status(HTTP_STATUS_CODES.OK).send(user);
+      const user = await this.userService.createUser(request.body); // Use UserService method
+      response.status(HTTP_STATUS_CODES.CREATED).send(user);
     } catch (error) {
       next(
         new APIError(
-          RESPONSE_MESSAGES.USER_UPDATE_FAIL,
-          'all',
+          RESPONSE_MESSAGES.USER_CREATE_FAIL,
+          'save',
           HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
         )
       );
-      response.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).send({
-        errors: [RESPONSE_MESSAGES.USER_CREATE_FAIL],
-      });
     }
   }
 
   async remove(request: Request, response: Response, next: NextFunction) {
     try {
-      const id = parseInt(request.params.id);
-      let userToRemove = await this.userRepository.findOneBy({ id });
-
-      if (!userToRemove) throw Error('User does not exist');
-      await this.userRepository.remove(userToRemove);
-
+      const id = parseInt(request.params.id, 10);
+      await this.userService.removeUser(id); // Use UserService method
       response.status(HTTP_STATUS_CODES.NO_CONTENT).send();
     } catch (error) {
-      response.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).send({
-        errors: [RESPONSE_MESSAGES.USER_DELETE_FAIL],
-      });
+      next(
+        new APIError(
+          RESPONSE_MESSAGES.USER_DELETE_FAIL,
+          'remove',
+          HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+        )
+      );
     }
   }
 }
