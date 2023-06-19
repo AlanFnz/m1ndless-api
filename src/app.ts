@@ -26,12 +26,7 @@ Routes.forEach((route) => {
             .json({ errors: errors.array() });
         }
 
-        const result = await new (route.controller as any)()[route.action](
-          req,
-          res,
-          next
-        );
-        res.json(result);
+        await new (route.controller as any)()[route.action](req, res, next);
       } catch (error) {
         next(error);
       }
