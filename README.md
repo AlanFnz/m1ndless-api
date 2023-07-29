@@ -1,4 +1,4 @@
-# M1ndless API
+# Visions API
 
 Steps to run this project:
 
